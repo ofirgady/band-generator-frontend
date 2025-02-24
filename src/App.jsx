@@ -99,18 +99,40 @@ function App() {
 						onChange={(e) => setDescription(e.target.value)}></textarea>
 					{errors.description && <p className='error'>{errors.description}</p>}
 				</label>
-
-				<label htmlFor='year'>
-					<span>Year:</span>
-					<DatePicker
-						selected={year}
-						onChange={(date) => setYear(date)}
-						showYearPicker
-						dateFormat='yyyy'
-						calendarClassName='custom-calendar'
-					/>
-					{errors.year && <p className='error'>{errors.year}</p>}
-				</label>
+				<div className='date-picker-container'>
+					<label htmlFor='year'>
+						<span>Year:</span>
+						<DatePicker
+							selected={year}
+							onChange={(date) => setYear(date)}
+							showYearPicker
+							dateFormat='yyyy'
+							required
+							renderCustomHeader={({ decreaseYear, increaseYear, prevYearButtonDisabled, nextYearButtonDisabled }) => (
+								<div className="custom-header">
+									<button type='button' onClick={decreaseYear} disabled={prevYearButtonDisabled}>
+										‹ Prev
+									</button>
+									<button type='button' onClick={increaseYear} disabled={nextYearButtonDisabled}>
+										Next ›
+									</button>
+								</div>
+							)}
+							popperProps={{
+								modifiers: [
+									{
+										name: 'preventOverflow',
+										options: {
+											altAxis: true,
+											padding: 8,
+										},
+									},
+								],
+							}}
+						/>
+						{errors.year && <p className='error'>{errors.year}</p>}
+					</label>
+				</div>
 
 				{loading ? (
 					<div className='spinner'></div>
@@ -121,25 +143,27 @@ function App() {
 				)}
 			</form>
 
-			{/* Statistics Section */}
-			<div className='statistics'>
-				<h2>Calculations</h2>
-				<p>Count of Words That Start with a Capital Letter: {capitalWordsCount}</p>
-				<p>Count of Words Followed by Numbers: {wordsFollowedByNumbersCount}</p>
-				<p>Year Selected is {isYearEven ? 'Even' : 'Odd'}</p>
-			</div>
+			{text && imageUrl && (
+				<>
+					{/* Statistics Section */}
+					<div className='statistics'>
+						<h2>Calculations</h2>
+						<p>Count of Words That Start with a Capital Letter: {capitalWordsCount}</p>
+						<p>Count of Words Followed by Numbers: {wordsFollowedByNumbersCount}</p>
+						<p>Year Selected is {isYearEven ? 'Even' : 'Odd'}</p>
+					</div>
 
-			{/* Text Output */}
-			<div className='description'>
-				{text && imageUrl && (
-					<div className='results'>
-						<p>{text}</p>
-						<div className='image'>
-							<img src={imageUrl} alt='Generated Band Image' />
+					{/* Text Output */}
+					<div className='description'>
+						<div className='results'>
+							<p>{text}</p>
+							<div className='image'>
+								<img src={imageUrl} alt='Generated Band Image' />
+							</div>
 						</div>
 					</div>
-				)}
-			</div>
+				</>
+			)}
 		</div>
 	)
 }

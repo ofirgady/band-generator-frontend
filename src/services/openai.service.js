@@ -4,7 +4,7 @@ const axios = Axios.create({
 	withCredentials: true,
 })
 
-const BASE_URL = 'http://localhost:3030/openai'
+const BASE_URL = process.env.NODE_ENV !== 'development' ? '/openai' : '//localhost:3030/openai'
 
 export const openaiService = {
 	getBandData,
